@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restorant Arte Gusto | Menu Digitale</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #faf7f2;
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #1e1e1e;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: #d94f2b;
+            font-weight: 700;
+        }
+
+        .admin-link {
+            background: #d94f2b;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .admin-link:hover {
+            background: #b33e1f;
+            transform: scale(1.02);
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-header h1 {
+            font-size: 2.8rem;
+            color: #2d2d2d;
+            margin-bottom: 12px;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Category tabs */
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 50px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 60px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .cat-btn {
+            background: transparent;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 40px;
+            color: #4a4a4a;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cat-btn i {
+            font-size: 1.2rem;
+        }
+
+        .cat-btn:hover {
+            background: #f0e9e2;
+            transform: translateY(-2px);
+        }
+
+        .cat-btn.active {
+            background: #d94f2b;
+            color: white;
+            box-shadow: 0 8px 20px rgba(217, 79, 43, 0.3);
+        }
+
+        /* Products grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 35px;
+            margin-top: 20px;
+        }
+
+        /* Product card */
+        .product-card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            height: 220px;
+            background: #e8e0d8;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .no-image {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8e0d8;
+            color: #a28e7c;
+            font-size: 3rem;
+        }
+
+        .price-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #d94f2b;
+            color: white;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        .product-info {
+            padding: 22px 20px 25px;
+        }
+
+        .product-info h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e1e1e;
+        }
+
+        .product-category {
+            display: inline-block;
+            background: #f0e9e2;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #8b5a44;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .product-description {
+            color: #5f5f5f;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            border-top: 1px dashed #ddd;
+            padding-top: 15px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #d94f2b;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            border: 2px solid white;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+            border-top: 1px solid #e0d8d0;
+            margin-top: 60px;
+        }
+
+        .footer i {
+            color: #d94f2b;
+        }
+
+        /* Loading skeleton */
+        .loading {
+            text-align: center;
+            padding: 100px;
+            font-size: 1.2rem;
+            color: #999;
+        }
+
+        /* Refresh indicator */
+        .refresh-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
+            border-radius: 50%;
+            margin-left: 10px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .category-tabs {
+                border-radius: 30px;
+                padding: 12px;
+            }
+            
+            .cat-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            
+            .notification {
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <span>ARTE</span> GUSTO
+        </div>
+        <a href="admin.html" class="admin-link">
+            <i class="fas fa-lock"></i> Menaxhimi
+        </a>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Menu Digitale</h1>
+            <p>Zbuloni shijet tona më të mira të përgatitura me përkushtim nga kuzhinierët tanë</p>
+        </div>
+
+        <!-- Kategorite -->
+        <div class="category-tabs" id="categoryTabs">
+            <!-- Do mbushet nga JavaScript -->
+        </div>
+
+        <!-- Produktet -->
+        <div class="products-grid" id="productsGrid">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Duke ngarkuar menunë...
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p><i class="fas fa-utensils"></i> Arte Gusto © 2026 | Të gjitha të drejtat e rezervuara</p>
+    </footer>
+
+    <!-- Notification (do të shfaqet kur përditësohet menuja) -->
+    <div id="notification" class="notification" style="display: none;">
+        <i class="fas fa-sync-alt fa-spin"></i>
+        <span id="notificationMessage">Menuja u përditësua</span>
+    </div>
+
+    <script>
+        // Të dhënat fillestare të menysë (nëse nuk ka asgjë në localStorage)
+        const defaultMenu = [
+            { 
+                id: '1', 
+                name: 'Makarona Bolognese', 
+                category: 'Pasta', 
+                price: 9.5, 
+                description: 'Makarona të freskëta të përgatitura ditor me salcë mishi të pjekur ngadalë për 4 orë.',
+                image: 'https://images.unsplash.com/photo-1622973536968-3ead9e780960?w=400&h=300&fit=crop'
+            },
+            { 
+                id: '2', 
+                name: 'Pizza Margherita', 
+                category: 'Pizza', 
+                price: 8.0, 
+                description: 'Mozzarella e freskët, salcë domateje organike, borzilok i freskët dhe vaj ulliri.',
+                image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=400&h=300&fit=crop'
+            },
+            { 
+                id: '3', 
+                name: 'Sallatë Cezar', 
+                category: 'Ushqim', 
+                price: 7.5, 
+                description: 'Sallatë jeshile, pulë e pjekur në skarë, parmixhan, krutona dhe salcë cezar shtëpie.',
+                image: 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=400&h=300&fit=crop'
+            },
+            { 
+                id: '4', 
+                name: 'Limonatë freskuese', 
+                category: 'Pije', 
+                price: 3.2, 
+                description: 'Limon i freskët, nenexhik nga kopështi ynë, ujë mineral.',
+                image: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&h=300&fit=crop'
+            },
+            { 
+                id: '5', 
+                name: 'Tiramisu klasik', 
+                category: 'Embelsira', 
+                price: 5.5, 
+                description: 'Ëmbëlsirë tradicionale italiane me mascarpone, kafe ekspres dhe kakao.',
+                image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&h=300&fit=crop'
+            },
+            { 
+                id: '6', 
+                name: 'Pizza Diavola', 
+                category: 'Pizza', 
+                price: 11.0, 
+                description: 'Sallam pikant, speca djegës, mozzarella dhe salcë domateje.',
+                image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop'
+            },
+            { 
+                id: '7', 
+                name: 'Rizoto me kërpudha', 
+                category: 'Ushqim', 
+                price: 10.0, 
+                description: 'Rizoto kremoz me kërpudha porcini dhe parmixhan të vjetër.',
+                image: 'https://images.unsplash.com/photo-1633964913295-ceb43826a07f?w=400&h=300&fit=crop'
+            },
+            { 
+                id: '8', 
+                name: 'Panna Cotta', 
+                category: 'Embelsira', 
+                price: 4.5, 
+                description: 'Panna cotta vanilje me salcë manaferrash të kuqe.',
+                image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop'
+            }
+        ];
+
+        // Inicializo localStorage nëse është bosh
+        if (!localStorage.getItem('restaurantMenu')) {
+            localStorage.setItem('restaurantMenu', JSON.stringify(defaultMenu));
+        }
+
+        // Variabla globale
+        let menuData = [];
+        let activeCategory = 'Të gjitha';
+        let categories = [];
+
+        // Elementet DOM
+        const categoryTabsEl = document.getElementById('categoryTabs');
+        const productsGridEl = document.getElementById('productsGrid');
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notificationMessage');
+
+        // Funksioni për të ngarkuar të dhënat nga localStorage
+        function loadMenuData() {
+            try {
+                const saved = localStorage.getItem('restaurantMenu');
+                if (saved) {
+                    menuData = JSON.parse(saved);
+                    console.log('Të dhënat u ngarkuan:', menuData); // Debug
+                } else {
+                    menuData = [...defaultMenu];
+                }
+                
+                // Sigurohu që çdo produkt ka fushën image
+                menuData = menuData.map(item => ({
+                    ...item,
+                    image: item.image || ''
+                }));
+                
+                // Përditëso kategoritë
+                updateCategories();
+                
+                // Render kategoritë dhe produktet
+                renderCategories();
+                renderProducts();
+            } catch (e) {
+                console.error('Gabim gjatë ngarkimit të të dhënave:', e);
+                menuData = [...defaultMenu];
+                renderCategories();
+                renderProducts();
+            }
+        }
+
+        // Përditëso listën e kategorive
+        function updateCategories() {
+            const uniqueCategories = new Set(menuData.map(item => item.category));
+            categories = ['Të gjitha', ...uniqueCategories];
+        }
+
+        // Funksioni për të shfaqur kategoritë
+        function renderCategories() {
+            categoryTabsEl.innerHTML = categories.map(cat => {
+                // Ikona për kategorite
+                let icon = 'list';
+                if (cat === 'Ushqim') icon = 'utensils';
+                else if (cat === 'Pije') icon = 'wine-glass';
+                else if (cat === 'Embelsira') icon = 'cake';
+                else if (cat === 'Pizza') icon = 'pizza-slice';
+                else if (cat === 'Pasta') icon = 'spaghetti';
+                
+                return `
+                    <button class="cat-btn ${activeCategory === cat ? 'active' : ''}" onclick="filterByCategory('${cat}')">
+                        <i class="fas fa-${icon}"></i>
+                        ${cat}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        // Funksioni për filtrim
+        window.filterByCategory = function(category) {
+            activeCategory = category;
+            renderCategories();
+            renderProducts();
+        };
+
+        // Funksioni për të shfaqur produktet
+        function renderProducts() {
+            // Filtro produktet
+            const filtered = activeCategory === 'Të gjitha' 
+                ? menuData 
+                : menuData.filter(p => p.category === activeCategory);
+
+            if (filtered.length === 0) {
+                productsGridEl.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 80px; color: #999;">
+                        <i class="fas fa-utensils" style="font-size: 4rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <p style="font-size: 1.3rem;">Nuk ka produkte në këtë kategori</p>
+                    </div>
+                `;
+                return;
+            }
+
+            productsGridEl.innerHTML = filtered.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${product.image 
+                            ? `<img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'no-image\'><i class=\'fas fa-image\'></i></div>'">` 
+                            : `<div class="no-image"><i class="fas fa-image"></i></div>`
+                        }
+                        <span class="price-badge">€${typeof product.price === 'number' ? product.price.toFixed(2) : parseFloat(product.price).toFixed(2)}</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <span class="product-category"><i class="fas fa-tag"></i> ${product.category}</span>
+                        <p class="product-description">${product.description || 'Përshkrimi i produktit...'}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Funksioni për të shfaqur njoftim
+        function showNotification(message) {
+            notificationMessage.textContent = message;
+            notification.style.display = 'flex';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Dëgjo për ndryshime në localStorage
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'restaurantMenu') {
+                console.log('Ndryshim në localStorage u detektua!');
+                
+                // Ngarko të dhënat e reja
+                try {
+                    const newData = JSON.parse(e.newValue);
+                    if (newData) {
+                        menuData = newData;
+                        updateCategories();
+                        renderCategories();
+                        renderProducts();
+                        showNotification('Menuja u përditësua nga admini!');
+                    }
+                } catch (error) {
+                    console.error('Gabim gjatë përpunimit të ndryshimit:', error);
+                }
+            }
+        });
+
+        // Kontrollo për ndryshime çdo 1 sekondë (si backup)
+        let lastMenuData = null;
+        setInterval(function() {
+            const currentData = localStorage.getItem('restaurantMenu');
+            if (currentData && currentData !== lastMenuData) {
+                try {
+                    const newData = JSON.parse(currentData);
+                    if (JSON.stringify(newData) !== JSON.stringify(menuData)) {
+                        console.log('Ndryshim u detektua nga interval checker');
+                        menuData = newData;
+                        updateCategories();
+                        renderCategories();
+                        renderProducts();
+                        showNotification('Menuja u përditësua!');
+                    }
+                } catch (e) {
+                    console.error('Gabim në interval checker:', e);
+                }
+            }
+            lastMenuData = currentData;
+        }, 1000);
+
+        // Ngarko të dhënat në fillim
+        loadMenuData();
+
+        // Log për të verifikuar
+        console.log('Index.html u ngarkua, duke pritur për ndryshime...');
+    </script>
+</body>
+</html>

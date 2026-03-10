@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu për Shtyp | Arte Gusto</title>
+    
+    <!-- Paper CSS për formatimin e faqeve -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.3.0/paper.css">
+    
+    <!-- Font Awesome për ikona -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* ===== KONFIGURIMI I FAQES A5 ===== */
+        @page {
+            size: A5;
+            margin: 0;
+        }
+        
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        body.A5 .sheet {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            background: white;
+            page-break-after: always;
+        }
+        
+        /* ===== STILET E MENYSË ===== */
+        .menu-page {
+            height: 148mm; /* Lartësi fikse A5 */
+            padding: 5mm 5mm 3mm 20mm; /* 2cm = 20mm në të majtë */
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+        /* Vizë ndihmëse për linjën e shpimit (opsionale) */
+        .drill-guide {
+            position: absolute;
+            left: 10mm; /* Gjysma e marginës */
+            top: 10mm;
+            bottom: 10mm;
+            width: 1px;
+            background: #ccc;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        /* Header i faqes */
+        .menu-header {
+            text-align: center;
+            margin-bottom: 3mm;
+            border-bottom: 2px solid #d94f2b;
+            padding-bottom: 1mm;
+            height: 18mm;
+        }
+        
+        .restaurant-name {
+            font-size: 20pt;
+            font-weight: 700;
+            color: #1e1e1e;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+        
+        .restaurant-name span {
+            color: #d94f2b;
+            font-weight: 400;
+        }
+        
+        .restaurant-sub {
+            font-size: 8pt;
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* Përmbajtja kryesore */
+        .menu-content {
+            flex: 1;
+            overflow: visible;
+        }
+        
+        /* Kategoritë dhe produktet */
+        .menu-section {
+            margin-bottom: 3mm;
+        }
+        
+        .category-title {
+            font-size: 12pt;
+            font-weight: 700;
+            color: #d94f2b;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 0.5mm;
+            margin-bottom: 1.5mm;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .category-title i {
+            margin-right: 2mm;
+            font-size: 10pt;
+            color: #b33e1f;
+        }
+        
+        .menu-items {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1mm;
+        }
+        
+        .menu-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-size: 9pt;
+            margin-bottom: 0.5mm;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            color: #2d2d2d;
+        }
+        
+        .item-dots {
+            flex: 1;
+            border-bottom: 1px dotted #ccc;
+            margin: 0 1mm;
+            height: 0.8em;
+        }
+        
+        .item-price {
+            font-weight: 700;
+            color: #d94f2b;
+            white-space: nowrap;
+            font-size: 9pt;
+        }
+        
+        .item-description {
+            font-size: 7pt;
+            color: #777;
+            font-style: italic;
+            margin-top: 0.5mm;
+            margin-bottom: 1mm;
+            padding-left: 2mm;
+        }
+        
+        /* FOOTER - Lartësi fikse */
+        .menu-footer {
+            height: 22mm;
+            margin-top: 2mm;
+            border-top: 2px solid #d94f2b;
+            padding-top: 1.5mm;
+            background-color: #f9f9f9;
+            border-radius: 2mm;
+            padding: 1.5mm 2mm;
+            box-sizing: border-box;
+        }
+        
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2mm;
+            margin-bottom: 1mm;
+            font-size: 7pt;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1mm;
+            color: #333;
+        }
+        
+        .contact-item i {
+            color: #d94f2b;
+            font-size: 8pt;
+            width: 10px;
+        }
+        
+        .social-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 3mm;
+            margin-bottom: 1mm;
+            font-size: 7pt;
+        }
+        
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 6pt;
+            color: #666;
+            margin-top: 0.5mm;
+            padding-top: 0.5mm;
+            border-top: 1px dotted #ccc;
+        }
+        
+        .page-number {
+            font-weight: 600;
+            color: #d94f2b;
+        }
+        
+        /* Butoni për PDF */
+        .print-controls {
+            text-align: center;
+            margin: 30px 20px;
+        }
+        
+        .btn-pdf {
+            background: #d94f2b;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .btn-pdf:hover {
+            background: #b33e1f;
+            transform: scale(1.02);
+        }
+        
+        /* Stile vetëm për printim */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .print-controls {
+                display: none;
+            }
+            
+            body.A5 .sheet {
+                box-shadow: none;
+                margin: 0;
+            }
+            
+            .menu-footer {
+                background-color: white;
+            }
+            
+            /* Fsheh vizën ndihmëse gjatë printimit */
+            .drill-guide {
+                display: none;
+            }
+        }
+        
+        /* Përshtatje për ekran */
+        @media screen and (max-width: 600px) {
+            .btn-pdf {
+                width: 90%;
+                justify-content: center;
+            }
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+        }
+    </style>
+</head>
+<body class="A5">
+    <div class="print-controls">
+        <button class="btn-pdf" onclick="window.print()">
+            <i class="fas fa-file-pdf"></i> 
+            Ruaj si PDF / Printo
+        </button>
+        <p style="margin-top: 15px; color: #666; font-size: 0.9rem;">
+            <i class="fas fa-info-circle"></i> 
+            Formati A5 - Me hapësirë 2cm majtas për kapje
+        </p>
+    </div>
+
+    <div id="menu-pages">
+        <div class="loading" style="text-align: center; padding: 50px;">
+            <i class="fas fa-spinner fa-spin fa-3x"></i>
+            <p>Duke gjeneruar menunë për printim...</p>
+        </div>
+    </div>
+
+    <script>
+        // ===== INFORMACIONET E KONTAKTIT =====
+        const CONTACT_INFO = {
+            phone: '+383 44 123 456',
+            email: 'info@artegusto.com',
+            web: 'www.artegusto.com',
+            facebook: 'artegusto.restaurant',
+            instagram: '@artegusto'
+        };
+
+        // ===== LARTËSITË E FIKSUARA NË MM =====
+        const PAGE_HEIGHT = 148; // mm
+        const HEADER_HEIGHT = 18; // mm
+        const FOOTER_HEIGHT = 22; // mm
+        const AVAILABLE_HEIGHT = PAGE_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT - 4; // 4mm margins
+        
+        // Lartësitë e elementeve
+        const CATEGORY_TITLE_HEIGHT = 6; // mm
+        const ITEM_HEIGHT = 4; // mm (produkt pa përshkrim)
+        const ITEM_WITH_DESC_HEIGHT = 6; // mm (produkt me përshkrim)
+        const SECTION_SPACING = 2; // mm
+
+        // ===== FUNKSIONI PËR GRUPIMIN SIPAS KATEGORIVE =====
+        function groupByCategory(items) {
+            return items.reduce((groups, item) => {
+                const category = item.category;
+                if (!groups[category]) {
+                    groups[category] = [];
+                }
+                groups[category].push(item);
+                return groups;
+            }, {});
+        }
+
+        // ===== FUNKSIONI PËR TË MARË IKONËN =====
+        function getCategoryIcon(category) {
+            const icons = {
+                'Ushqim': 'utensils',
+                'Pije': 'wine-glass',
+                'Embelsira': 'cake',
+                'Pizza': 'pizza-slice',
+                'Pasta': 'spaghetti'
+            };
+            return icons[category] || 'tag';
+        }
+
+        // ===== FUNKSIONI PËR TË SHMANGUR XSS =====
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ===== FUNKSIONI PËR TË LLOGARITUR LARTËSINË E NJË ARTIKULLI =====
+        function getItemHeight(item) {
+            return item.description ? ITEM_WITH_DESC_HEIGHT : ITEM_HEIGHT;
+        }
+
+        // ===== FUNKSIONI PËR TË LLOGARITUR LARTËSINË E NJË KATEGORIE =====
+        function calculateCategoryHeight(category, items) {
+            let total = CATEGORY_TITLE_HEIGHT;
+            items.forEach(item => {
+                total += getItemHeight(item);
+            });
+            return total;
+        }
+
+        // ===== FUNKSIONI PËR TË GRUPUAR ARTIKUJT NË FAQE =====
+        function paginateItems(allItems) {
+            const pages = [];
+            let currentPage = [];
+            let currentHeight = 0;
+            
+            // Grupojmë fillimisht sipas kategorive
+            const grouped = groupByCategory(allItems);
+            
+            // Krijojmë një listë të kategorive dhe artikujve të tyre
+            const categoryOrder = ['Ushqim', 'Pije', 'Embelsira', 'Pizza', 'Pasta'];
+            const sortedCategories = Object.keys(grouped).sort((a, b) => {
+                return categoryOrder.indexOf(a) - categoryOrder.indexOf(b);
+            });
+            
+            let categoryStructure = [];
+            sortedCategories.forEach(category => {
+                const items = grouped[category];
+                categoryStructure.push({
+                    category: category,
+                    items: items,
+                    height: calculateCategoryHeight(category, items)
+                });
+            });
+            
+            console.log('Kategoritë dhe lartësitë:', categoryStructure.map(c => 
+                `${c.category}: ${c.height}mm (${c.items.length} artikuj)`
+            ));
+            
+            // Krijo faqet duke respektuar lartësinë maksimale
+            for (let i = 0; i < categoryStructure.length; i++) {
+                const category = categoryStructure[i];
+                
+                // Nëse kategoria e tërë nuk futet në faqen aktuale
+                if (currentHeight + category.height > AVAILABLE_HEIGHT && currentPage.length > 0) {
+                    // Ruaj faqen aktuale dhe fillo një të re
+                    pages.push(currentPage);
+                    currentPage = [];
+                    currentHeight = 0;
+                }
+                
+                // Shto kategorinë në faqen aktuale
+                currentPage.push(category);
+                currentHeight += category.height;
+                
+                // Shto hapësirën ndërmjet kategorive
+                if (currentHeight < AVAILABLE_HEIGHT) {
+                    currentHeight += SECTION_SPACING;
+                }
+            }
+            
+            // Shto faqen e fundit nëse ka
+            if (currentPage.length > 0) {
+                pages.push(currentPage);
+            }
+            
+            console.log(`U krijuan ${pages.length} faqe`);
+            pages.forEach((page, idx) => {
+                const itemCount = page.reduce((sum, cat) => sum + cat.items.length, 0);
+                console.log(`Faqja ${idx + 1}: ${page.length} kategori, ${itemCount} artikuj`);
+            });
+            
+            return pages;
+        }
+
+        // ===== FUNKSIONI PËR TË KRIJUAR FOOTER-IN =====
+        function createFooter(pageNumber, totalPages) {
+            return `
+                <div class="menu-footer">
+                    <div class="contact-row">
+                        <div class="contact-item">
+                            <i class="fas fa-phone-alt"></i> ${CONTACT_INFO.phone}
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i> ${CONTACT_INFO.email}
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-globe"></i> ${CONTACT_INFO.web}
+                        </div>
+                    </div>
+                    <div class="social-row">
+                        <div class="contact-item">
+                            <i class="fab fa-facebook"></i> ${CONTACT_INFO.facebook}
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-instagram"></i> ${CONTACT_INFO.instagram}
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <span><i class="far fa-calendar-alt"></i> 2026</span>
+                        <span class="page-number"><i class="far fa-file"></i> Faqja ${pageNumber} nga ${totalPages}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ===== FUNKSIONI KRYESOR PËR GJENERIMIN E FAQEVE =====
+        function generatePages() {
+            console.log('Gjeneroj faqet...');
+            console.log('Lartësia e disponueshme për përmbajtje:', AVAILABLE_HEIGHT, 'mm');
+            
+            // Merr të dhënat nga localStorage
+            let menuData = [];
+            try {
+                const saved = localStorage.getItem('restaurantMenu');
+                if (saved) {
+                    menuData = JSON.parse(saved);
+                    console.log('Të dhënat e marra:', menuData.length, 'produkte');
+                } else {
+                    // Të dhëna shembull për testim
+                    menuData = [
+                        { id: '1', name: 'Makarona Bolognese', category: 'Pasta', price: 9.5, description: 'Makarona të freskëta' },
+                        { id: '2', name: 'Pizza Margherita', category: 'Pizza', price: 8.0, description: 'Mozzarella e freskët' },
+                        { id: '3', name: 'Sallatë Cezar', category: 'Ushqim', price: 7.5, description: 'Sallatë jeshile' }
+                    ];
+                }
+            } catch (e) {
+                console.error('Gabim:', e);
+            }
+
+            if (!menuData || menuData.length === 0) {
+                document.getElementById('menu-pages').innerHTML = `
+                    <div class="no-data">
+                        <i class="fas fa-utensils" style="font-size: 4rem; margin-bottom: 20px;"></i>
+                        <h2>Nuk ka produkte në menu</h2>
+                        <p>Shkoni te admin paneli për të shtuar produkte.</p>
+                        <a href="admin.html" style="color: #d94f2b; text-decoration: none;">⮕ Shko te Admin</a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Krijo listën e të gjithë artikujve
+            let allItems = menuData.map(item => ({
+                ...item,
+                category: item.category
+            }));
+
+            // Grupo në faqe duke llogaritur lartësinë
+            const pages = paginateItems(allItems);
+            const totalPages = pages.length;
+            
+            let allPages = '';
+            
+            // Krijo HTML për çdo faqe
+            pages.forEach((pageCategories, pageIndex) => {
+                let pageContent = `
+                    <div class="menu-page">
+                        <!-- Vizë ndihmëse për linjën e shpimit (opsionale) -->
+                        <div class="drill-guide"></div>
+                        
+                        <div class="menu-header">
+                            <div class="restaurant-name"><span>ARTE</span> GUSTO</div>
+                            <div class="restaurant-sub">Traditë & Shije Italiane</div>
+                        </div>
+                        <div class="menu-content">
+                `;
+                
+                pageCategories.forEach(category => {
+                    pageContent += `
+                        <div class="menu-section">
+                            <div class="category-title">
+                                <i class="fas fa-${getCategoryIcon(category.category)}"></i>
+                                ${category.category}
+                            </div>
+                            <div class="menu-items">
+                    `;
+                    
+                    category.items.forEach(item => {
+                        pageContent += `
+                            <div class="menu-item-row">
+                                <span class="item-name">${escapeHtml(item.name)}</span>
+                                <span class="item-dots"></span>
+                                <span class="item-price">€${typeof item.price === 'number' ? item.price.toFixed(2) : parseFloat(item.price).toFixed(2)}</span>
+                            </div>
+                        `;
+                        
+                        if (item.description) {
+                            pageContent += `
+                                <div class="item-description">${escapeHtml(item.description)}</div>
+                            `;
+                        }
+                    });
+                    
+                    pageContent += `</div></div>`;
+                });
+                
+                // Shto footer-in
+                pageContent += `
+                        </div>
+                        ${createFooter(pageIndex + 1, totalPages)}
+                    </div>
+                `;
+                
+                allPages += `
+                    <section class="sheet">
+                        ${pageContent}
+                    </section>
+                `;
+            });
+            
+            // Vendos në container
+            document.getElementById('menu-pages').innerHTML = allPages;
+            console.log('Gjenerimi përfundoi!');
+        }
+
+        // Thirr funksionin menjëherë
+        generatePages();
+
+        // Dëgjo për ndryshime
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'restaurantMenu') {
+                console.log('Ndryshim në menu, rigjeneroj...');
+                generatePages();
+            }
+        });
+
+        window.addEventListener('focus', function() {
+            console.log('Faqja u bë aktive, kontrollo për ndryshime...');
+            generatePages();
+        });
+    </script>
+</body>
+</html>
